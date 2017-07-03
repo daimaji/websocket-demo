@@ -13,55 +13,56 @@ import java.util.concurrent.CopyOnWriteArraySet;
 @ServerEndpoint(value = "/websocket")
 @Component
 public class WsController {
-    //静态变量，用来记录当前在线连接数。应该把它设计成线程安全的。
+    //current connects
     private static int onlineCount = 0;
 
-    //concurrent包的线程安全Set，用来存放每个客户端对应的MyWebSocket对象。
+    //package concurrent's Thread-Safe Set, use for store every client's MyWebSocket object.
     private static CopyOnWriteArraySet<WsController> webSocketSet = new CopyOnWriteArraySet<WsController>();
 
-    //与某个客户端的连接会话，需要通过它来给客户端发送数据
     private Session session;
 
     /**
-     * 连接建立成功调用的方法*/
+     * Connect Success
+     **/
     @OnOpen
     public void onOpen(Session session) {
         this.session = session;
-        webSocketSet.add(this);     //加入set中
-        addOnlineCount();           //在线数加1
-        System.out.println("有新连接加入！当前在线人数为" + getOnlineCount());
+        webSocketSet.add(this);     //add to set
+        addOnlineCount();           //online plus
+        System.out.println("one more connect join in！current num of online is " + getOnlineCount());
         try {
-            sendMessage("欢迎你" + session.getId() + "！");
+            sendMessage("Welcome " + session.getId() + "！");
         } catch (IOException e) {
-            System.out.println("IO异常");
+            System.out.println("IO Exception");
         }
     }
 
     /**
-     * 连接关闭调用的方法
+     *  Connect Close
      */
     @OnClose
     public void onClose() {
-        webSocketSet.remove(this);  //从set中删除
-        subOnlineCount();           //在线数减1
-        System.out.println("有一连接关闭！当前在线人数为" + getOnlineCount());
+        webSocketSet.remove(this);  //delete from set
+        subOnlineCount();           //online minus 1
+        System.out.println("one connect closed！current num of online is " + getOnlineCount());
     }
 
     /**
-     * 收到客户端消息后调用的方法
+     * receive message from client
      *
-     * @param message 客户端发送过来的消息*/
+     * @param message message from client
+     **/
     @OnMessage
     public void onMessage(String message, Session session) {
-        System.out.println("来自客户端" + session.getId() +"的消息:" + message);
+        System.out.println("from client " + session.getId() +"'s message :" + message);
         String sessionId = session.getId();
-        //群发消息
+        //mass message
         for (WsController item : webSocketSet) {
             if (!sessionId.equals(item.session.getId())) {
                 continue;
             }
             try {
-                item.sendMessage(message + "------来自" + session.getId() + "！");
+                item.sendMessage(message + "------from " + session.getId() + "！");
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -69,11 +70,11 @@ public class WsController {
     }
 
     /**
-     * 发生错误时调用
+     * Error
      * */
      @OnError
      public void onError(Session session, Throwable error) {
-     System.out.println("发生错误");
+     System.out.println("error(s)");
      error.printStackTrace();
      }
 
@@ -85,7 +86,7 @@ public class WsController {
 
 
      /**
-      * 群发自定义消息
+      *custom mass message
       * */
     public static void sendInfo(String message) throws IOException {
         for (WsController item : webSocketSet) {
