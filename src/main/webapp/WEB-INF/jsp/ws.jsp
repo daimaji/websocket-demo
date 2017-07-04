@@ -12,13 +12,13 @@ Welcome<br/>
 <div id="message">
 </div>
 </body>
-
+<script>var serverName = '${serverName}'</script>
 <script type="text/javascript">
     var websocket = null;
 
     //current brower support WebSocket or not
     if ('WebSocket' in window) {
-        websocket = new WebSocket("ws://localhost:8080/websocket");
+        websocket = new WebSocket("ws://" + serverName + "/websocket");
     }
     else {
         alert('Not support websocket')

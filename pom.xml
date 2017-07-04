@@ -6,7 +6,7 @@
 	<groupId>com.agji</groupId>
 	<artifactId>websocket-demo</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>jar</packaging>
+	<packaging>war</packaging>
 
 	<name>websocket-demo</name>
 	<description>Demo project for Spring Boot</description>
@@ -25,10 +25,32 @@
 	</properties>
 
 	<dependencies>
+		<!--<dependency>-->
+			<!--<groupId>org.springframework.boot</groupId>-->
+			<!--<artifactId>spring-boot-starter-thymeleaf</artifactId>-->
+		<!--</dependency>-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-thymeleaf</artifactId>
+			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-tomcat</artifactId>
+			<!--<scope>provided</scope>-->
+		</dependency>
+		<dependency>
+			<groupId>org.apache.tomcat.embed</groupId>
+			<artifactId>tomcat-embed-jasper</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>jstl</artifactId>
+		</dependency>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-websocket</artifactId>
@@ -46,8 +68,41 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+
+				<configuration>
+					<!--fork : 如果没有该项配置，可能devtools不会起作用，即应用不会restart -->
+					<fork>true</fork>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>repackage</goal>
+						</goals>
+					</execution>
+				</executions>
+
 			</plugin>
 		</plugins>
+
+		<!--<resources>-->
+			<!--&lt;!&ndash; 打包时将jsp文件拷贝到META-INF目录下&ndash;&gt;-->
+			<!--<resource>-->
+				<!--&lt;!&ndash; 指定resources插件处理哪个目录下的资源文件 &ndash;&gt;-->
+				<!--<directory>src/main/webapp</directory>-->
+				<!--&lt;!&ndash;注意此次必须要放在此目录下才能被访问到&ndash;&gt;-->
+				<!--<targetPath>META-INF/resources</targetPath>-->
+				<!--<includes>-->
+					<!--<include>**/**</include>-->
+				<!--</includes>-->
+			<!--</resource>-->
+			<!--<resource>-->
+				<!--<directory>src/main/resources</directory>-->
+				<!--<includes>-->
+					<!--<include>**/**</include>-->
+				<!--</includes>-->
+				<!--<filtering>false</filtering>-->
+			<!--</resource>-->
+		<!--</resources>-->
 	</build>
 
 
